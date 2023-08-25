@@ -1,0 +1,10 @@
+---
+# vars file for csrs
+PRI_IP_ADD: "{{ansible_default_ipv4.address}}"
+
+user_name: "{{hostvars[inventory_hostname]['username']}}"
+user_password: "{{hostvars[inventory_hostname]['password']}}"
+
+node1_ip: "{{hostvars[inventory_hostname]['csrs_node1_ip']}}"
+node2_ip: "{{hostvars[inventory_hostname]['csrs_node2_ip']}}"
+node3_ip: "{{hostvars[inventory_hostname]['csrs_node3_ip']}}"

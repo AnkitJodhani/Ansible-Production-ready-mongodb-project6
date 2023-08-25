@@ -1,0 +1,59 @@
+all:
+  hosts:
+    shard1: 
+      ansible_host: "{{shard_node1_ip}}"
+    shard2: 
+      ansible_host: "{{shard_node2_ip}}"
+    shard3: 
+      ansible_host: "{{shard_node3_ip}}"
+    csrs1:
+      ansible_host: "{{csrs_node1_ip}}"
+    csrs2:
+      ansible_host: "{{csrs_node2_ip}}"
+    csrs3:
+      ansible_host: "{{csrs_node3_ip}}"
+    mongos1:
+      ansible_host: "{{mongos_node1_ip}}"
+    mongos2:
+      ansible_host: "{{mongos_node2_ip}}"
+    nginx_1:
+      ansible_host: "{{nginx_node1_ip}}"
+    nginx_2:
+      ansible_host: "{{nginx_node2_ip}}"
+    nginx_3:
+      ansible_host: "{{nginx_node3_ip}}"
+
+
+  children:
+    shards: 
+      hosts:
+        shard1:
+        shard2:
+        shard3:
+    csrs: 
+      hosts:
+        csrs1:
+        csrs2:
+        csrs3:
+    mongos: 
+      hosts:
+        mongos1:
+        mongos2:
+    nginx_cluster:
+      hosts:
+        nginx_1:
+        nginx_2:
+        nginx_3:
+    mongo_cluster:
+      children: 
+        shards:
+        csrs:
+        mongos:  
+    servers:
+      children: 
+        mongo_cluster:
+        nginx_cluster:
+      vars:
+        ansible_user: ubuntu
+        ansible_ssh_private_key_file: key.pem 
+

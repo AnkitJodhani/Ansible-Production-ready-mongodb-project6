@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu
+
+hooks:
+  ApplicationStart:
+    - location: deploy-script/application-start.sh
+      timeout: 800  
+
+

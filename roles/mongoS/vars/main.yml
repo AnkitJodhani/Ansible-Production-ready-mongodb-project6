@@ -1,0 +1,14 @@
+---
+# vars file for mongoS
+
+PRI_IP_ADD: "{{ansible_default_ipv4.address}}"
+
+user_name: "{{hostvars[inventory_hostname]['username']}}"
+user_password: "{{hostvars[inventory_hostname]['password']}}"
+
+csrs1_ip: "{{hostvars[inventory_hostname]['csrs_node1_ip']}}"
+csrs2_ip: "{{hostvars[inventory_hostname]['csrs_node2_ip']}}"
+csrs3_ip: "{{hostvars[inventory_hostname]['csrs_node3_ip']}}"
+
+csrs_port: "{{hostvars[inventory_hostname]['csrs_list'][0]['csrs_port']}}"
+

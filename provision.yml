@@ -1,0 +1,39 @@
+---
+- name: configure all the basic requirement on all the servers
+  hosts: mongo_cluster
+  become: yes    
+  roles:
+    - role: post-install
+      tags:
+        - post_installation
+
+- name: configure sharding on 3 server
+  hosts: shards
+  become: yes
+  tasks:
+    - include_role:
+        name: sharding
+      loop: "{{ shard_list }}"
+
+- name: configure "Config server" on 3 server
+  hosts: csrs
+  become: yes
+  tasks:
+    - include_role:
+        name: csrs
+      loop: "{{ csrs_list }}"
+
+- name: configure "MongoS routing process" on 2 server
+  hosts: mongos
+  become: yes
+  tasks:
+    - include_role:
+        name: mongoS
+      loop: "{{ mongos_list }}"
+
+- name: configureing nginx servers
+  hosts: nginx_cluster
+  become: yes
+  roles:
+    - role: nginx
+      

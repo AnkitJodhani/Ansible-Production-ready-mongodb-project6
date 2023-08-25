@@ -1,0 +1,17 @@
+sharding:
+  configDB: csrs/{{csrs1_ip}}:{{csrs_port}},{{csrs2_ip}}:{{csrs_port}},{{csrs3_ip}}:{{csrs_port}}
+
+security:
+  keyFile: /home/ubuntu/mongodb/pki/ankit
+
+net:
+  bindIp: {{PRI_IP_ADD | quote }},localhost
+  port: {{item.mongos_port}}
+
+systemLog:
+  destination: file
+  path: /home/ubuntu/mongodb/db/mongos.log
+  logAppend: true
+
+processManagement:
+  fork: true

@@ -1,0 +1,51 @@
+---
+# tasks file for sharding
+
+- name: Create a directory if it does not exist shard 1/2/3
+  file:
+    path: /home/ubuntu/mongodb/db/{{item.shard_name}}
+    state: directory
+
+- name: setup the configuration files
+  template:
+    src: shard.j2
+    dest: /home/ubuntu/{{item.shard_name}}.conf
+    owner: ubuntu
+    group: ubuntu
+
+- name: Check if port 27011/27012/27013 is already in use
+  shell: netstat -tuln | grep :{{item.shard_port}}
+  register: port_check
+  changed_when: false
+  ignore_errors: yes
+  failed_when: False
+
+# - name: printing output of the port
+#   debug:
+#     var: port_check
+
+- name: lets start the mongod nodes
+  command: mongod -f /home/ubuntu/{{item.shard_name}}.conf
+  when: port_check.rc != 0
+  
+- name: copying configuration file
+  template:
+    src: user_config.j2
+    dest: /home/ubuntu/config.js
+  when: inventory_hostname == 'shard1'
+
+- name: executing config.js (initilize replica and username & password)
+  shell: mongosh --port {{item.shard_port}} --eval < /home/ubuntu/config.js
+  when: inventory_hostname == 'shard1'
+
+- name: copying configuration file
+  template:
+    src: replicaset_node.j2
+    dest: /home/ubuntu/config.js
+  when: inventory_hostname == 'shard1'
+
+- name: Create MongoDB Admin User
+  shell: mongosh --host {{item.shard_name}}/{{PRI_IP_ADD}}:{{item.shard_port}} -u "{{user_name}}" -p "{{user_password}}" --authenticationDatabase "admin" --eval < /home/ubuntu/config.js
+  when: inventory_hostname == 'shard1'
+  register: data
+

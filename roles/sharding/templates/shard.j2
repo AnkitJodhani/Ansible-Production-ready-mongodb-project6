@@ -1,0 +1,26 @@
+sharding:
+  clusterRole: shardsvr
+
+storage:
+  dbPath: /home/ubuntu/mongodb/db/{{item.shard_name}}
+
+net:
+  bindIp: {{PRI_IP_ADD | quote }},localhost
+  port: {{item.shard_port}}
+
+security:
+  authorization: enabled
+  keyFile: /home/ubuntu/mongodb/pki/ankit
+
+systemLog:
+  destination: file
+  path: /home/ubuntu/mongodb/db/{{item.shard_name}}/mongod.log
+  logAppend: true
+
+processManagement:
+  fork: true
+
+replication:
+  replSetName: {{item.shard_name}}
+
+

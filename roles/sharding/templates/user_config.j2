@@ -1,0 +1,12 @@
+
+rs.initiate()
+
+use admin 
+
+db.createUser({
+	user: "{{user_name}}",
+	pwd: "{{user_password}}",
+	roles: [
+	  {role: "root", db: "admin"}
+	]
+})

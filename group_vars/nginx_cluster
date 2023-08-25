@@ -1,0 +1,4 @@
+nginx_node1_ip: 172.20.4.237
+nginx_node2_ip: 172.20.6.11
+nginx_node3_ip: 172.20.5.39
+

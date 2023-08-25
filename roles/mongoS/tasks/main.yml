@@ -1,0 +1,47 @@
+---
+# tasks file for mongoS
+
+
+- name: Create a directory mongos if it does't exist
+  file:
+    path: /home/ubuntu/mongodb/db/mongos
+    state: directory
+
+- name: setup the configuration files
+  template:
+    src: mongoS.j2
+    dest: /home/ubuntu/mongos.conf
+    owner: ubuntu
+    group: ubuntu
+
+- name: Check if port 26000 is already in use
+  shell: netstat -tuln | grep :{{item.mongos_port}}
+  register: port_check
+  changed_when: false
+  ignore_errors: yes
+  failed_when: False
+
+# - name: printing output of the port
+#   debug:
+#     var: port_check
+
+- name: lets start the mongod nodes
+  command: mongos -f /home/ubuntu/mongos.conf
+  when: port_check.rc != 0
+  
+- name: copying configuration file
+  template:
+    src: shard_list.j2
+    dest: /home/ubuntu/config.js
+
+- name: printting credentials
+  debug:
+    msg: "---{{user_name}}---{{user_password}}"
+
+- name: configure mongos and apply all the shards
+  shell: mongosh --port {{item.mongos_port}} -u "{{user_name}}" -p "{{user_password}}" --authenticationDatabase "admin" --eval < /home/ubuntu/config.js
+  register: data
+
+- name: printing
+  debug:
+    var: data

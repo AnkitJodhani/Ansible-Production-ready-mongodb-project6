@@ -1,0 +1,96 @@
+---
+# tasks file for post-install
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install tools and other prerequisites
+  apt:
+    name:
+      - net-tools
+      - gnupg
+      - curl
+    state: present
+
+- name: Check if MongoDB GPG key is already imported
+  stat:
+    path: /usr/share/keyrings/mongodb-server-6.0.gpg
+  register: key_file_stat
+  changed_when: false
+
+- name: Import MongoDB public GPG key
+  shell: |
+    curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
+  when: key_file_stat.stat.exists == false
+
+- name: Add MongoDB APT repository
+  blockinfile:
+    path: /etc/apt/sources.list.d/mongodb-org-6.0.list
+    block: |
+      deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse
+    create: yes
+
+- name: Update APT cache
+  apt:
+    update_cache: yes
+
+- name: Install MongoDB packages
+  apt:
+    name: mongodb-org
+    state: latest
+    update_cache: yes
+
+- name: Enable and start MongoDB service
+  service:
+    name: mongod
+    state: started
+    enabled: yes
+
+- name: Check if the "ankit" key file is already exist in control-machine?
+  stat:
+    path: /home/ubuntu/roles/post-install/files/ankit
+  delegate_to: localhost
+  register: key_file
+
+- name: creating key file for authentication with name "ankit"
+  shell: openssl rand -base64 741 > /home/ubuntu/roles/post-install/files/ankit
+  delegate_to: localhost
+  when: not key_file.stat.exists
+
+- name: Create a directory if it does not exist
+  file:
+    path: /home/ubuntu/mongodb/db
+    state: directory
+
+- name: Create a directory if it does not exist
+  file:
+    path: /home/ubuntu/mongodb/pki
+    state: directory
+
+
+- name: Recursively change ownership of a directory
+  file:
+    path: /home/ubuntu/mongodb
+    state: directory
+    recurse: yes
+    owner: ubuntu
+    group: ubuntu
+
+- name: Copy file key file from CM to Remote machine
+  copy:
+    src: ankit
+    dest: /home/ubuntu/mongodb/pki/ankit
+    owner: ubuntu
+    group: ubuntu
+    mode: '0400'
+
+- name: installing pymongo
+  ansible.builtin.apt:
+    name: python3-pymongo
+    state: present
+
+
+# - name: Apply configuration to cloudwatch agent
+#   shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+#   delegate_to: localhost

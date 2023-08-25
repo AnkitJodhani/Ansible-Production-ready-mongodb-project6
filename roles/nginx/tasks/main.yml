@@ -1,0 +1,29 @@
+---
+# tasks file for nginx
+
+- name: lets update cache first
+  ansible.builtin.apt:
+    update_cache: yes
+    
+- name: installing apache server 
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: starting the apache service
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Copy fies to the remote server
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    backup: yes
+
+- name: starting the apache service
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+    enabled: yes

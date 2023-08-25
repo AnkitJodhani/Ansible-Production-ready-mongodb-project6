@@ -1,0 +1,6 @@
+
+sh.addShard("{{hostvars[inventory_hostname]['shard_list'][0]['shard_name']}}/{{hostvars[inventory_hostname]['shard_node1_ip']}}:{{hostvars[inventory_hostname]['shard_list'][0]['shard_port']}}")
+sh.addShard("{{hostvars[inventory_hostname]['shard_list'][1]['shard_name']}}/{{hostvars[inventory_hostname]['shard_node2_ip']}}:{{hostvars[inventory_hostname]['shard_list'][1]['shard_port']}}")
+sh.addShard("{{hostvars[inventory_hostname]['shard_list'][2]['shard_name']}}/{{hostvars[inventory_hostname]['shard_node3_ip']}}:{{hostvars[inventory_hostname]['shard_list'][2]['shard_port']}}")
+
+sh.status()

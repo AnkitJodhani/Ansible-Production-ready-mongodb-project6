@@ -1,0 +1,33 @@
+shard_list:
+  - name: task1
+    shard_name: shard_1
+    shard_port: 27011
+  - name: task2
+    shard_name: shard_2
+    shard_port: 27012
+  - name: task2
+    shard_name: shard_3
+    shard_port: 27013
+
+
+csrs_list:
+  - name: task1
+    csrs_name: csrs
+    csrs_port: 26011
+    
+mongos_list:
+  - name: task1
+    mongos_port: 26000
+
+shard_node1_ip: 172.20.7.141
+shard_node2_ip: 172.20.8.200
+shard_node3_ip: 172.20.9.174
+csrs_node1_ip: 172.20.7.104
+csrs_node2_ip: 172.20.8.126
+csrs_node3_ip: 172.20.9.7
+mongos_node1_ip: 172.20.7.200
+mongos_node2_ip: 172.20.9.229
+
+
+username: "{{lookup('env','username') }}"
+password: "{{lookup('env','password') }}"
