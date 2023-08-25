@@ -34,9 +34,9 @@
     src: shard_list.j2
     dest: /home/ubuntu/config.js
 
-- name: printting credentials
-  debug:
-    msg: "---{{user_name}}---{{user_password}}"
+# - name: printting credentials for testing
+#   debug:
+#     msg: "---{{user_name}}---{{user_password}}"
 
 - name: configure mongos and apply all the shards
   shell: mongosh --port {{item.mongos_port}} -u "{{user_name}}" -p "{{user_password}}" --authenticationDatabase "admin" --eval < /home/ubuntu/config.js
