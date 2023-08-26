@@ -2,6 +2,9 @@
 
 🌟 Welcome to the Ansible repository dedicated to setting up and configuring a robust MongoDB sharded cluster effortlessly. This repository provides well-structured Ansible roles and a playbook designed to streamline the deployment process. If you're looking to deploy a scalable MongoDB sharded cluster, you're in the right place!
 
+## 🏠 Architecture
+![Architecture of the application](architecture.gif)
+
 ## 🔖 Prerequisites: Installing Ansible and Required Packages on Ubuntu
 
 ```sh
