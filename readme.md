@@ -37,7 +37,8 @@ pip install boto3
 sudo apt  install jq -y
 ```
 ## Full Blog
-Blog link
+[Blog](https://ankitjodhani.hashnode.dev/production-ready-mongodb-cluster-nginx-on-aws-using-ansible-and-terraform-highly-available-and-fault-tolerant) 
+
 
 ## 📦 Cloning the Repository
 
